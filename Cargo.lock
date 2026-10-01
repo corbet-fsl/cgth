@@ -178,7 +178,7 @@ checksum = "f079e83a288787bcd14a6aea84cee5c87a67c5a3e660c30f557a3d24761b3527"
 [[package]]
 name = "cgrd"
 version = "0.0.0"
-source = "git+https://github.com/corbet-foss/cgrd?branch=main#540db6bb67af34d4eae99fc3d05c3d3af1943ed8"
+source = "git+https://github.com/corbet-foss/cgrd?branch=main#d1cacbdb863534183d27de468359f657aa7174fa"
 dependencies = [
  "bigdecimal",
  "cpns",
@@ -186,6 +186,7 @@ dependencies = [
  "csgn",
  "cshm",
  "ed25519-dalek",
+ "geographiclib-rs",
  "precis-profiles",
  "rustrict",
  "serde",
@@ -236,7 +237,7 @@ dependencies = [
 [[package]]
 name = "clkp"
 version = "0.1.0"
-source = "git+https://github.com/corbet-foss/clkp?branch=main#af5513db4536425e3ce4934c75d9322ff73a21dc"
+source = "git+https://github.com/corbet-foss/clkp?branch=main#f5a6059cd34eadcb4782f144f51374f253a938db"
 dependencies = [
  "cgrd",
  "cmmr",
@@ -266,7 +267,7 @@ dependencies = [
 [[package]]
 name = "cmmr"
 version = "0.1.0"
-source = "git+https://github.com/corbet-foss/cmmr?branch=main#9fbc6bc78cfcb7c6190cfe9079dce21c288e7b1f"
+source = "git+https://github.com/corbet-foss/cmmr?branch=main#259f33871f650ec82f4a6e9f8ded3f7d50a0efc6"
 dependencies = [
  "serde",
 ]
@@ -305,7 +306,7 @@ dependencies = [
 [[package]]
 name = "cpns"
 version = "0.0.0"
-source = "git+https://github.com/corbet-foss/cpns?branch=main#85674ab2e70f11051ba30ab44a8c7d3301ac6ec1"
+source = "git+https://github.com/corbet-foss/cpns?branch=main#7b189964a9513f937ba774d603d4b5a327df640b"
 dependencies = [
  "getrandom 0.4.3",
  "sha2",
@@ -325,7 +326,7 @@ dependencies = [
 [[package]]
 name = "crbk"
 version = "0.0.0"
-source = "git+https://github.com/corbet-foss/crbk?branch=main#ee4f73334818e2053c7df3d123a8e3b8cc23b2cf"
+source = "git+https://github.com/corbet-foss/crbk?branch=main#36025fadb8a364857ef893939cd739d48da891b0"
 dependencies = [
  "serde",
  "serde_json",
@@ -350,7 +351,7 @@ dependencies = [
 [[package]]
 name = "csgn"
 version = "0.0.0"
-source = "git+https://github.com/corbet-foss/csgn?branch=main#eac891b771152b17aa3a903edfe9c129e43a371e"
+source = "git+https://github.com/corbet-foss/csgn?branch=main#5f914e7947a48c8dd0e8d52771e184981bbe6b1d"
 dependencies = [
  "ciborium-ll",
  "coset",
@@ -362,7 +363,7 @@ dependencies = [
 [[package]]
 name = "cshm"
 version = "0.0.0"
-source = "git+https://github.com/corbet-foss/cshm?branch=main#9fe8a3271ddecf0846d888d038645a55687c2111"
+source = "git+https://github.com/corbet-foss/cshm?branch=main#2fddfc89a3e3503df1430cd22eaf090ca52bc694"
 dependencies = [
  "bigdecimal",
  "jsonschema",
@@ -374,9 +375,10 @@ dependencies = [
 [[package]]
 name = "cswb"
 version = "0.1.0"
-source = "git+https://github.com/corbet-foss/cswb?branch=main#47afc4630253046589e80cf7521f3b743f15a1a1"
+source = "git+https://github.com/corbet-foss/cswb?branch=main#cc221c38d74f5a3f4d99b2679d6e53f4cec4a465"
 dependencies = [
  "cmmr",
+ "data-encoding",
  "serde",
  "serde_json",
 ]
@@ -384,7 +386,7 @@ dependencies = [
 [[package]]
 name = "cthl"
 version = "0.0.0"
-source = "git+https://github.com/corbet-foss/cthl?branch=main#e719761a51795a115a969f50353df27f8c152bfd"
+source = "git+https://github.com/corbet-foss/cthl?branch=main#ce5eabb53b14a1c2936bfbcc3ba2a182e16a3502"
 dependencies = [
  "governor",
 ]
@@ -591,6 +593,15 @@ dependencies = [
  "futures-task",
  "pin-project-lite",
  "slab",
+]
+
+[[package]]
+name = "geographiclib-rs"
+version = "0.2.7"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c5a7f08910fd98737a6eda7568e7c5e645093e073328eeef49758cfe8b0489c7"
+dependencies = [
+ "libm",
 ]
 
 [[package]]
