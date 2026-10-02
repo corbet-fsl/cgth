@@ -6,12 +6,18 @@ description = "Gather for the volatile forum"
 repository = "https://github.com/corbet-libs/cgth"
 license-file = "LICENSE.md"
 
+[features]
+default = []
+issuer = ["cmbl/issuer"]
+
 [dependencies]
 cswb = { git = "https://github.com/corbet-foss/cswb", branch = "main" }
 clkp = { git = "https://github.com/corbet-foss/clkp", branch = "main" }
 cmmr = { git = "https://github.com/corbet-foss/cmmr", branch = "main" }
 cthl = { git = "https://github.com/corbet-foss/cthl", branch = "main" }
 cmbl = { git = "https://github.com/corbet-foss/cmbl", branch = "main" }
+
+cshm = { git = "https://github.com/corbet-foss/cshm", branch = "main" }
 
 [dev-dependencies]
 tokio = { version = "1", features = ["rt", "macros"] }
