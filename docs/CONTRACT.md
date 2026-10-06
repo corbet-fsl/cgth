@@ -4,4 +4,24 @@ Thin routing only: Switchboard owns presence, Lookup owns matching indexes, Asse
 
 Preflight calls the existing cthl::Throttle over its owner store. Presence methods forward sealed cswb Admission/Current/Session capabilities unchanged; Lookup projections are re-exported without an independent listing. Room and handover calls forward the exact cmbl Request/ProofVerifier/Outcome protocol, preserving owner refusals and storing no attendance link.
 
-Implementation and acceptance remain incomplete. No public constructor can yet supply current production admission capabilities, so the presence forwarding success paths remain untested and strict coverage fails. Tests exercise actual cthl quotas, cmmr cleanup and cmbl unavailable/invalid proof refusals; they never synthesize an accepting verifier. Current Assurance/public record/device attestation/publication integration and live matching remain external seams. No coverage exclusion or lower threshold is used for missing integration.
+The candidate facade delegates real challenges, one-use device admission,
+current request authorization, complete replacement, Lookup pages and ciphertext
+to their original owners. No verifier or match state is copied here. Existing
+quota/room refusal tests are retained. The new success paths remain uncompiled
+pending bottom-up child qualification; anonymous room issuance is separate
+messaging-owned work.
+
+G1 credential/Guard checks belong to `cgrd::check_published`, referenced through
+Charter and Assurance. Envoy (`cnvy`) fetches/follows feeds; it does not verify
+authority. Current Profile device authority and per-request possession must be composed
+with those owner checks. The05:45 binding MVP correction requires G2 frontier/ZK
+currentness and public punishment; original owner capability integration remains
+mandatory before this composition can claim complete admission. No second
+verifier, accepting substitute or optional check is introduced here.
+
+The native `issuer` feature holds one original `BudgetedIssuer` capability and
+forwards its checked epoch and issuance ports. It cannot replace an installed
+issuer, export its key, reset its allowance, or accept a caller member string.
+`issue_room_pass` forwards the canonical member from sealed `cswb::Current`;
+Forum must obtain that capability by verifying the exact fresh device request.
+The original issuer still owns every budget/anchor CAS and blinded response.
