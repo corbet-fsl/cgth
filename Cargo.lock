@@ -178,7 +178,7 @@ checksum = "f079e83a288787bcd14a6aea84cee5c87a67c5a3e660c30f557a3d24761b3527"
 [[package]]
 name = "cgrd"
 version = "0.0.0"
-source = "git+https://github.com/corbet-foss/cgrd?branch=main#540db6bb67af34d4eae99fc3d05c3d3af1943ed8"
+source = "git+https://git.corbet.ch/corbet-foss/cgrd?branch=main#540db6bb67af34d4eae99fc3d05c3d3af1943ed8"
 dependencies = [
  "bigdecimal",
  "cpns",
@@ -236,7 +236,7 @@ dependencies = [
 [[package]]
 name = "clkp"
 version = "0.1.0"
-source = "git+https://github.com/corbet-foss/clkp?branch=main#af5513db4536425e3ce4934c75d9322ff73a21dc"
+source = "git+https://git.corbet.ch/corbet-foss/clkp?branch=main#af5513db4536425e3ce4934c75d9322ff73a21dc"
 dependencies = [
  "cgrd",
  "cmmr",
@@ -251,7 +251,7 @@ dependencies = [
 [[package]]
 name = "cmbl"
 version = "0.1.0"
-source = "git+https://github.com/corbet-foss/cmbl?branch=main#7ac807572a2fc5f0a3c4d3a472359c7368337b1b"
+source = "git+https://git.corbet.ch/corbet-foss/cmbl?branch=main#7ac807572a2fc5f0a3c4d3a472359c7368337b1b"
 dependencies = [
  "blake3",
  "cmmr",
@@ -266,7 +266,7 @@ dependencies = [
 [[package]]
 name = "cmmr"
 version = "0.1.0"
-source = "git+https://github.com/corbet-foss/cmmr?branch=main#9fbc6bc78cfcb7c6190cfe9079dce21c288e7b1f"
+source = "git+https://git.corbet.ch/corbet-foss/cmmr?branch=main#9fbc6bc78cfcb7c6190cfe9079dce21c288e7b1f"
 dependencies = [
  "serde",
 ]
@@ -305,7 +305,7 @@ dependencies = [
 [[package]]
 name = "cpns"
 version = "0.0.0"
-source = "git+https://github.com/corbet-foss/cpns?branch=main#85674ab2e70f11051ba30ab44a8c7d3301ac6ec1"
+source = "git+https://git.corbet.ch/corbet-foss/cpns?branch=main#85674ab2e70f11051ba30ab44a8c7d3301ac6ec1"
 dependencies = [
  "getrandom 0.4.3",
  "sha2",
@@ -325,7 +325,7 @@ dependencies = [
 [[package]]
 name = "crbk"
 version = "0.0.0"
-source = "git+https://github.com/corbet-foss/crbk?branch=main#ee4f73334818e2053c7df3d123a8e3b8cc23b2cf"
+source = "git+https://git.corbet.ch/corbet-foss/crbk?branch=main#ee4f73334818e2053c7df3d123a8e3b8cc23b2cf"
 dependencies = [
  "serde",
  "serde_json",
@@ -350,7 +350,7 @@ dependencies = [
 [[package]]
 name = "csgn"
 version = "0.0.0"
-source = "git+https://github.com/corbet-foss/csgn?branch=main#eac891b771152b17aa3a903edfe9c129e43a371e"
+source = "git+https://git.corbet.ch/corbet-foss/csgn?branch=main#eac891b771152b17aa3a903edfe9c129e43a371e"
 dependencies = [
  "ciborium-ll",
  "coset",
@@ -362,7 +362,7 @@ dependencies = [
 [[package]]
 name = "cshm"
 version = "0.0.0"
-source = "git+https://github.com/corbet-foss/cshm?branch=main#9fe8a3271ddecf0846d888d038645a55687c2111"
+source = "git+https://git.corbet.ch/corbet-foss/cshm?branch=main#9fe8a3271ddecf0846d888d038645a55687c2111"
 dependencies = [
  "bigdecimal",
  "jsonschema",
@@ -374,7 +374,7 @@ dependencies = [
 [[package]]
 name = "cswb"
 version = "0.1.0"
-source = "git+https://github.com/corbet-foss/cswb?branch=main#47afc4630253046589e80cf7521f3b743f15a1a1"
+source = "git+https://git.corbet.ch/corbet-foss/cswb?branch=main#47afc4630253046589e80cf7521f3b743f15a1a1"
 dependencies = [
  "cmmr",
  "serde",
@@ -384,7 +384,7 @@ dependencies = [
 [[package]]
 name = "cthl"
 version = "0.0.0"
-source = "git+https://github.com/corbet-foss/cthl?branch=main#e719761a51795a115a969f50353df27f8c152bfd"
+source = "git+https://git.corbet.ch/corbet-foss/cthl?branch=main#e719761a51795a115a969f50353df27f8c152bfd"
 dependencies = [
  "governor",
 ]
