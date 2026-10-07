@@ -3,3 +3,6 @@
 /coverage.lcov
 /resolver.txt
 /format.patch
+.moon/
+moon.yml
+.ccid/
