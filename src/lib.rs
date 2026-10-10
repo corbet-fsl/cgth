@@ -72,12 +72,10 @@ impl<S: Store, C: Clock, R: Tokens, Q: cthl::Store> Gather<S, C, R, Q> {
         verification: &cswb::Verification<'_>,
         contact: &impl Fn(&str) -> cshm::ContactCheck,
     ) -> Result<(Session, Live), Error> {
-        let admission = self
-            .presence
-            .admit(proof, verification, contact)
+        self.presence
+            .admit_enter(proof, verification, contact)
             .await
-            .map_err(Error::Presence)?;
-        self.enter(admission).await
+            .map_err(Error::Presence)
     }
 
     pub async fn authorize(

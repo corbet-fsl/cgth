@@ -6,8 +6,12 @@ Preflight calls the existing cthl::Throttle over its owner store. Presence metho
 
 The candidate facade delegates real challenges, one-use device admission,
 current request authorization, complete replacement, Lookup pages and ciphertext
-to their original owners. No verifier or match state is copied here. Existing
-quota/room refusal tests are retained. The new success paths remain uncompiled
+to their original owners. No verifier or match state is copied here. Admission
+forwards to Switchboard's single `admit_enter` operation: pending
+challenge consumption and complete attendance/index publication share one
+existing multi-record CAS. Gather never separates challenge consumption from
+attendance insertion. Original lower-owner sealed-capability methods remain.
+Existing quota/room refusal tests are retained. The new success paths remain uncompiled
 pending bottom-up child qualification; anonymous room issuance is separate
 messaging-owned work.
 
