@@ -17,7 +17,7 @@ cmmr = { git = "https://git.corbet.ch/corbet-foss/cmmr.git", branch = "v01" }
 cthl = { git = "https://git.corbet.ch/corbet-foss/cthl.git", branch = "v01" }
 cmbl = { git = "https://git.corbet.ch/corbet-foss/cmbl.git", branch = "v01" }
 
-cshm = { git = "https://git.corbet.ch/corbet-foss/cshm.git", branch = "v01" }
+cshm = { git = "https://git.corbet.ch/corbet-foss/cshm", branch = "main" }
 
 [dev-dependencies]
 tokio = { version = "1", features = ["rt", "macros"] }
