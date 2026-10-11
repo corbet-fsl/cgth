@@ -175,6 +175,12 @@ impl<S: Store, C: Clock, R: Tokens, Q: cthl::Store> AccountGather<S, C, R, Q> {
         self.gather.preflight(key, action).await
     }
 
+    /// Final host clock cut through this owner's retained interior observation
+    /// floor. This is time only, never an admission or accounting capability.
+    pub fn observed_now(&self) -> Result<u64, Error> {
+        self.clock.now()
+    }
+
     fn check(
         &mut self,
         current: &Authorized,

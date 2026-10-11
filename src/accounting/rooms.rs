@@ -47,7 +47,18 @@ impl<S: Store, C: Clock, R: Tokens, Q: cthl::Store> AccountGather<S, C, R, Q> {
         &mut self,
         verification: &Verification<'_>,
     ) -> Result<VerifiedRecordEpoch, Error> {
-        let (current, quota) = self.room_view(verification)?;
+        let (current, quota) = match self.room_view(verification) {
+            Ok(value) => value,
+            Err(error) => {
+                // This is already the application's actual sealed Charter,
+                // never caller-selected wire material. Lost common authority
+                // cannot resurrect an old issuer in the same incarnation.
+                if let Some(frozen) = self.room_authority.as_mut() {
+                    frozen.invalidated = true;
+                }
+                return Err(error);
+            }
+        };
         let frozen = self
             .room_authority
             .as_mut()
