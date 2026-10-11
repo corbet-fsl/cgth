@@ -6,6 +6,19 @@ export CARGO_TERM_COLOR="${CARGO_TERM_COLOR:-always}"
 # dependency-policy first-party only; deny advisories separate always-run.
 python3 .github/check-first-party.py
 
+# Import the independently checked genuine R2 capture into this job's own
+# snapshot. Never execute an unpinned cached worker or regenerate these proofs.
+fixture_cache_root=${CI_CACHE_ROOT:-${CARGO_HOME:-}}
+[[ $fixture_cache_root = /* ]] || { echo 'An absolute fixture cache root is required' >&2; exit 2; }
+fixture_snapshot=$(mktemp -d "${RUNNER_TEMP:-${TMPDIR:-/tmp}}/cgth-record-fixture.XXXXXXXX")
+export CBLC_BB
+CBLC_BB=$(python3 .ci/check-record-fixture.py \
+  --directory "$fixture_cache_root/ccid-cached/08a9478e457e604aa31f9a54/release-artifacts/gather-record-fixture" \
+  --source d6014acbef63f4cd0929b20091884dd422421fc3 \
+  --metadata-sha256 7270351d40c1ed49b1499ec82e59449e6d28ca715d5590485dee56e7ef757ff2 \
+  --output "$fixture_snapshot/capture")
+export CBLC_RECORD_EPOCH_FIXTURE="$fixture_snapshot/capture/gather-record-fixture.json"
+
 # check job exact order.
 rustc --version
 rustc --version
