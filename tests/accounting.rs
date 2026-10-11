@@ -23,6 +23,9 @@ mod g1;
 mod lookup;
 #[path = "accounting/refusals.rs"]
 mod refusals;
+#[cfg(feature = "issuer")]
+#[path = "accounting/rooms.rs"]
+mod rooms;
 use fixture::Fixture;
 use g1::{G1, ORIGIN, clean};
 

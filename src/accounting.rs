@@ -16,8 +16,12 @@ use std::sync::atomic::{AtomicU64, Ordering};
 
 mod entry;
 mod reads;
+#[cfg(feature = "issuer")]
+mod rooms;
 pub use entry::Replacement;
 pub use reads::{CiphertextRequest, PageRequest, WatchRequest};
+#[cfg(feature = "issuer")]
+pub use rooms::RoomConfiguration;
 
 /// Trusted application configuration, independent of incoming records. The
 /// publisher must define this exact catalogue key with RecordEpochSettings.
@@ -73,6 +77,8 @@ pub struct AccountGather<S, C, R, Q> {
     verifier: RecordVerifier,
     configuration: Configuration,
     clock: ObservedClock<C>,
+    #[cfg(feature = "issuer")]
+    room_authority: Option<rooms::RoomAuthority>,
 }
 
 struct ObservedClock<C> {
@@ -156,6 +162,8 @@ impl<S: Store, C: Clock, R: Tokens, Q: cthl::Store> AccountGather<S, C, R, Q> {
             gather,
             verifier,
             configuration,
+            #[cfg(feature = "issuer")]
+            room_authority: None,
             clock: ObservedClock {
                 clock,
                 floor: AtomicU64::new(0),

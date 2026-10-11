@@ -39,7 +39,7 @@ fn sign(issuer: &mut Signer, kind: Kind, value: Value, now: u64) -> Vec<u8> {
         .sign(kind, &serde_json::to_vec(&value).unwrap(), now, now + 300)
         .unwrap()
 }
-fn feed(native: &NativeFixture, lease_ms: u64) -> Value {
+pub(super) fn feed(native: &NativeFixture, lease_ms: u64) -> Value {
     let community = &native.material.community;
     let now = native.now;
     let epoch = native.material.policy_epoch;
