@@ -7,8 +7,12 @@ use cswb::{Admission, Current, Live, Session, Switchboard, Tokens};
 pub use clkp::{IndexKey, Plan, Projection};
 pub use {clkp, cmbl, cmmr, cswb, cthl};
 
+#[cfg(all(feature = "accounting", not(target_arch = "wasm32")))]
+pub mod accounting;
+
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Error {
+    AccountingUnavailable,
     QuotaUnavailable,
     QuotaExceeded,
     Presence(cswb::Error),
