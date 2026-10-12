@@ -259,6 +259,20 @@ impl<S: Store, C: Clock, R: Tokens, Q: cthl::Store> Gather<S, C, R, Q> {
             .map_err(Error::Rooms)
     }
 
+    /// One page of listed public rooms: opaque id, public name and description,
+    /// and the here-now count. Traffic volume is never part of this view.
+    pub async fn list_rooms(
+        &self,
+        cursor: Option<&cmmr::Cursor>,
+        limit: usize,
+        now: u64,
+    ) -> Result<cmbl::listing::ListPage, Error> {
+        self.rooms
+            .list(cursor, limit, now)
+            .await
+            .map_err(Error::Rooms)
+    }
+
     pub fn room_handover(&self, proof: &[u8]) -> Result<(), Error> {
         self.rooms.handover(proof).map_err(Error::Rooms)
     }

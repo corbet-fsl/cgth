@@ -204,6 +204,23 @@ impl<S: Store, C: Clock, R: Tokens, Q: cthl::Store> AccountGather<S, C, R, Q> {
         Ok(signature)
     }
 
+    /// A current member reads one page of the room listing. The read is bound to
+    /// the member's own session and current record; it reveals no identity.
+    pub async fn list_rooms(
+        &mut self,
+        read: Read<'_>,
+        cursor: Option<&cmmr::Cursor>,
+        limit: usize,
+        verification: &Verification<'_>,
+        contact: &impl Fn(&str) -> cshm::ContactCheck,
+    ) -> Result<cmbl::listing::ListPage, Error> {
+        read.validate()?;
+        self.confirm(read.current, verification, contact).await?;
+        self.gather
+            .list_rooms(cursor, limit, self.clock.now()?)
+            .await
+    }
+
     /// Anonymous use checks common epoch authority and the genuine original
     /// room proof only. No member lookup or identity is introduced here.
     pub async fn room(
