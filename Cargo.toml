@@ -12,9 +12,9 @@ issuer = ["cmbl/issuer"]
 accounting = ["dep:cblc", "dep:czkp", "dep:cchr", "dep:crbk", "dep:cbcn", "dep:serde", "dep:serde_json", "dep:data-encoding"]
 
 [dependencies]
-cswb = { git = "https://git.corbet.ch/corbet-foss/cswb.git", branch = "v01" }
-clkp = { git = "https://git.corbet.ch/corbet-foss/clkp.git", branch = "v01" }
-cmmr = { git = "https://git.corbet.ch/corbet-foss/cmmr.git", branch = "v01" }
+cswb = { git = "https://git.corbet.ch/corbet-foss/cswb.git", branch = "main" }
+clkp = { git = "https://git.corbet.ch/corbet-foss/clkp.git", branch = "main" }
+cmmr = { git = "https://git.corbet.ch/corbet-foss/cmmr.git", branch = "main" }
 cthl = { git = "https://git.corbet.ch/corbet-foss/cthl", branch = "main" }
 cmbl = { git = "https://git.corbet.ch/corbet-foss/cmbl.git", branch = "main" }
 
@@ -35,7 +35,7 @@ tokio = { version = "1", features = ["rt", "macros"] }
 cpfl = { git = "https://git.corbet.ch/corbet-foss/cpfl.git", branch = "main" }
 cgrd = { git = "https://git.corbet.ch/corbet-foss/cgrd", branch = "main", default-features = false }
 csgn = { git = "https://git.corbet.ch/corbet-foss/csgn", branch = "main", default-features = false, features = ["volatile-signer"] }
-ckmg = { git = "https://git.corbet.ch/corbet-foss/ckmg.git", branch = "v01" }
-cwst = { git = "https://git.corbet.ch/corbet-foss/cwst.git", branch = "v01" }
-cnvl = { git = "https://git.corbet.ch/corbet-foss/cnvl.git", branch = "v01" }
+ckmg = { git = "https://git.corbet.ch/corbet-foss/ckmg.git", branch = "main" }
+cwst = { git = "https://git.corbet.ch/corbet-foss/cwst.git", branch = "main" }
+cnvl = { git = "https://git.corbet.ch/corbet-foss/cnvl.git", branch = "main" }
 ed25519-dalek = { version = "3", default-features = false, features = ["fast"] }
