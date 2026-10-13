@@ -11,11 +11,22 @@ cache_outputs = ["coverage.json", "coverage.lcov"]
 kind = "commands"
 commands = [["cargo", "deny", "--locked", "check", "advisories"]]
 
+[checks.resolve-dependencies]
+kind = "commands"
+commands = [["bash", ".ci/resolve-dependencies.sh"]]
+cache_outputs = ["Cargo.lock", "dependency-metadata.json"]
+
 [render]
 tool_revision = "223adb5a008f4ed1ba36d1f52796ccd29077db6e"
 
 [jobs.verify]
 scheduler = "crow"
 checks = ["verify", "advisories"]
+workflow = "repository-jobs"
+command = ["bash", ".ci/run-cached.sh"]
+
+[jobs.resolve-dependencies]
+scheduler = "crow"
+checks = ["resolve-dependencies"]
 workflow = "repository-jobs"
 command = ["bash", ".ci/run-cached.sh"]

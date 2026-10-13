@@ -5,12 +5,18 @@ use cmmr::{Clock, Revision, Store};
 use cswb::{Admission, Current, Live, Session, Switchboard, Tokens};
 
 pub use clkp::{IndexKey, Plan, Projection};
+pub use {clkp, cmbl, cmmr, cswb, cthl};
+
+#[cfg(all(feature = "accounting", not(target_arch = "wasm32")))]
+pub mod accounting;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Error {
+    AccountingUnavailable,
     QuotaUnavailable,
     QuotaExceeded,
     Presence(cswb::Error),
+    Lookup(clkp::LookupError),
     Rooms(cmbl::Error),
 }
 
@@ -19,6 +25,9 @@ pub struct Gather<S, C, R, Q> {
     presence: Switchboard<S, C, R>,
     throttle: cthl::Throttle<Q>,
     rooms: cmbl::Assembly<S>,
+    lookup: clkp::Lookup<S, R>,
+    #[cfg(all(feature = "issuer", not(target_arch = "wasm32")))]
+    issuer: Option<cmbl::passes::issuer::BudgetedIssuer<S>>,
 }
 
 impl<S: Store, C: Clock, R: Tokens, Q: cthl::Store> Gather<S, C, R, Q> {
@@ -26,11 +35,15 @@ impl<S: Store, C: Clock, R: Tokens, Q: cthl::Store> Gather<S, C, R, Q> {
         presence: Switchboard<S, C, R>,
         throttle: cthl::Throttle<Q>,
         rooms: cmbl::Assembly<S>,
+        lookup: clkp::Lookup<S, R>,
     ) -> Self {
         Self {
             presence,
             throttle,
             rooms,
+            lookup,
+            #[cfg(all(feature = "issuer", not(target_arch = "wasm32")))]
+            issuer: None,
         }
     }
 
@@ -42,6 +55,94 @@ impl<S: Store, C: Clock, R: Tokens, Q: cthl::Store> Gather<S, C, R, Q> {
             Ok(cthl::Decision::Denied { .. }) => Err(Error::QuotaExceeded),
             Err(_) => Err(Error::QuotaUnavailable),
         }
+    }
+
+    pub async fn challenge(
+        &self,
+        origin: &str,
+        publication: &cswb::Publication,
+        verification: &cswb::Verification<'_>,
+        contact: &impl Fn(&str) -> cshm::ContactCheck,
+    ) -> Result<cswb::Challenge, Error> {
+        self.presence
+            .challenge(origin, publication, verification, contact)
+            .await
+            .map_err(Error::Presence)
+    }
+
+    pub async fn admit(
+        &self,
+        proof: cswb::EntryProof<'_>,
+        verification: &cswb::Verification<'_>,
+        contact: &impl Fn(&str) -> cshm::ContactCheck,
+    ) -> Result<(Session, Live), Error> {
+        self.presence
+            .admit_enter(proof, verification, contact)
+            .await
+            .map_err(Error::Presence)
+    }
+
+    pub async fn authorize(
+        &self,
+        request: cswb::RequestProof<'_>,
+        verification: &cswb::Verification<'_>,
+        contact: &impl Fn(&str) -> cshm::ContactCheck,
+    ) -> Result<Current, Error> {
+        self.presence
+            .authorize(request, verification, contact)
+            .await
+            .map_err(Error::Presence)
+    }
+
+    pub async fn replacement(
+        &self,
+        session: &Session,
+        current: &Current,
+        publication: &cswb::Publication,
+        verification: &cswb::Verification<'_>,
+        contact: &impl Fn(&str) -> cshm::ContactCheck,
+    ) -> Result<Admission, Error> {
+        self.presence
+            .replacement(session, current, publication, verification, contact)
+            .await
+            .map_err(Error::Presence)
+    }
+
+    pub async fn page(
+        &self,
+        request: clkp::PageRequest<'_>,
+        verification: &cswb::Verification<'_>,
+        contact: &impl Fn(&str) -> cshm::ContactCheck,
+    ) -> Result<clkp::Matches, Error> {
+        self.lookup
+            .page(&self.presence, request, verification, contact)
+            .await
+            .map_err(Error::Lookup)
+    }
+
+    pub async fn watch(
+        &self,
+        request: clkp::WatchRequest<'_>,
+        verification: &cswb::Verification<'_>,
+        contact: &impl Fn(&str) -> cshm::ContactCheck,
+    ) -> Result<clkp::Delta, Error> {
+        self.lookup
+            .watch(&self.presence, request, verification, contact)
+            .await
+            .map_err(Error::Lookup)
+    }
+
+    pub async fn ciphertext(
+        &self,
+        request: clkp::PageRequest<'_>,
+        owner: (&str, u64),
+        verification: &cswb::Verification<'_>,
+        contact: &impl Fn(&str) -> cshm::ContactCheck,
+    ) -> Result<Vec<u8>, Error> {
+        self.lookup
+            .ciphertext(&self.presence, request, owner, verification, contact)
+            .await
+            .map_err(Error::Lookup)
     }
 
     pub async fn enter(&self, admission: Admission) -> Result<(Session, Live), Error> {
@@ -91,6 +192,58 @@ impl<S: Store, C: Clock, R: Tokens, Q: cthl::Store> Gather<S, C, R, Q> {
         self.presence.expire().await.map_err(Error::Presence)
     }
 
+    /// Install the one common owner capability. Replacing a live issuer needs
+    /// a new service incarnation; this facade has no key export or reset port.
+    #[cfg(all(feature = "issuer", not(target_arch = "wasm32")))]
+    pub fn install_room_issuer(
+        &mut self,
+        issuer: cmbl::passes::issuer::BudgetedIssuer<S>,
+    ) -> Result<(), Error> {
+        if self.issuer.is_some() {
+            return Err(Error::Rooms(cmbl::Error::Conflict));
+        }
+        self.issuer = Some(issuer);
+        Ok(())
+    }
+
+    /// Preserve the issuer owner's live-anchor check before common descriptor
+    /// publication or anonymous use. Never manufacture a replacement on loss.
+    #[cfg(all(feature = "issuer", not(target_arch = "wasm32")))]
+    pub async fn room_epoch(&self, now: u64) -> Result<&cmbl::passes::Epoch, Error> {
+        let issuer = self
+            .issuer
+            .as_ref()
+            .ok_or(Error::Rooms(cmbl::Error::ProofUnavailable))?;
+        issuer.share(now).await.map_err(Error::Rooms)?;
+        Ok(issuer.epoch())
+    }
+
+    /// Only the sealed current admission supplies the canonical member. The
+    /// original issuer performs its atomic allowance and exact-retry check.
+    #[cfg(all(feature = "issuer", not(target_arch = "wasm32")))]
+    pub async fn issue_room_pass(
+        &self,
+        current: &Current,
+        operation: cmbl::Id,
+        request: &cmbl::passes::BlindRequest,
+        now: u64,
+    ) -> Result<Vec<u8>, Error> {
+        if now >= current.authority_until() {
+            return Err(Error::Presence(cswb::Error::Expired));
+        }
+        let issuer = self
+            .issuer
+            .as_ref()
+            .ok_or(Error::Rooms(cmbl::Error::ProofUnavailable))?;
+        if current.binding().community != issuer.epoch().community {
+            return Err(Error::Rooms(cmbl::Error::Refused));
+        }
+        issuer
+            .issue(&current.binding().member, operation, request, now)
+            .await
+            .map_err(Error::Rooms)
+    }
+
     /// Assembly alone checks the anonymous permit, bounds and ordering.
     /// This does not link a room operation to a presence member or device.
     pub async fn room(
@@ -102,6 +255,20 @@ impl<S: Store, C: Clock, R: Tokens, Q: cthl::Store> Gather<S, C, R, Q> {
     ) -> Result<cmbl::Outcome, Error> {
         self.rooms
             .execute(request, proof, verifier, now)
+            .await
+            .map_err(Error::Rooms)
+    }
+
+    /// One page of listed public rooms: opaque id, public name and description,
+    /// and the here-now count. Traffic volume is never part of this view.
+    pub async fn list_rooms(
+        &self,
+        cursor: Option<&cmmr::Cursor>,
+        limit: usize,
+        now: u64,
+    ) -> Result<cmbl::listing::ListPage, Error> {
+        self.rooms
+            .list(cursor, limit, now)
             .await
             .map_err(Error::Rooms)
     }

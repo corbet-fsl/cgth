@@ -65,7 +65,16 @@ async fn real_quota_and_volatile_children_remain_the_owners() {
         },
     )
     .unwrap();
-    let gather = Gather::new(presence, throttle, rooms);
+    let lookup = clkp::Lookup::new(
+        storage.clone(),
+        Random,
+        clkp::LookupLimits {
+            candidates: 1,
+            publication_bytes: 100,
+        },
+    )
+    .unwrap();
+    let gather = Gather::new(presence, throttle, rooms, lookup);
     assert_eq!(
         gather.preflight(b"opaque-client", "challenge").await,
         Ok(())
