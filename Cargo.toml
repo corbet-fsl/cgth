@@ -23,7 +23,7 @@ cshm = { git = "https://git.corbet.ch/corbet-foss/cshm", branch = "main" }
 [target.'cfg(not(target_arch = "wasm32"))'.dependencies]
 cblc = { git = "https://git.corbet.ch/corbet-libs/cblc", branch = "main", features = ["publication"], optional = true }
 czkp = { git = "https://git.corbet.ch/corbet-foss/czkp", branch = "main", optional = true }
-cchr = { git = "https://git.corbet.ch/corbet-foss/cchr.git", branch = "v01", optional = true }
+cchr = { git = "https://git.corbet.ch/corbet-foss/cchr.git", branch = "main", optional = true }
 crbk = { git = "https://git.corbet.ch/corbet-foss/crbk", branch = "main", default-features = false, optional = true }
 cbcn = { git = "https://git.corbet.ch/corbet-foss/cbcn", branch = "main", optional = true }
 serde = { version = "1", features = ["derive"], optional = true }
@@ -32,7 +32,7 @@ data-encoding = { version = "2", optional = true }
 
 [dev-dependencies]
 tokio = { version = "1", features = ["rt", "macros"] }
-cpfl = { git = "https://git.corbet.ch/corbet-foss/cpfl.git", branch = "v01" }
+cpfl = { git = "https://git.corbet.ch/corbet-foss/cpfl.git", branch = "main" }
 cgrd = { git = "https://git.corbet.ch/corbet-foss/cgrd", branch = "main", default-features = false }
 csgn = { git = "https://git.corbet.ch/corbet-foss/csgn", branch = "main", default-features = false, features = ["volatile-signer"] }
 ckmg = { git = "https://git.corbet.ch/corbet-foss/ckmg.git", branch = "v01" }
