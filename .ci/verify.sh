@@ -22,6 +22,7 @@ export CBLC_RECORD_EPOCH_FIXTURE="$fixture_snapshot/capture/gather-record-fixtur
 # check job exact order.
 rustc --version
 rustc --version
+bash .ci/update-our-crates.sh
 cargo fmt --all
 git diff --exit-code -- '*.rs' > format.patch
 cargo clippy --locked --all-targets -- -D warnings
