@@ -79,6 +79,8 @@ pub struct AccountGather<S, C, R, Q> {
     clock: ObservedClock<C>,
     #[cfg(feature = "issuer")]
     room_authority: Option<rooms::RoomAuthority>,
+    /// Room passes per member and common epoch of this release (a code constant).
+    room_quota: u64,
 }
 
 struct ObservedClock<C> {
@@ -140,6 +142,15 @@ fn material<'a>(
     ))
 }
 
+impl<S, C, R, Q> AccountGather<S, C, R, Q> {
+    /// Model a release whose room-pass constant differs from the one the original issuer was
+    /// activated under (the only way the quota can change). Test fixture API.
+    #[doc(hidden)]
+    pub fn set_room_quota(&mut self, quota: u64) {
+        self.room_quota = quota;
+    }
+}
+
 impl<S: Store, C: Clock, R: Tokens, Q: cthl::Store> AccountGather<S, C, R, Q> {
     pub fn new(
         gather: Gather<S, C, R, Q>,
@@ -164,6 +175,7 @@ impl<S: Store, C: Clock, R: Tokens, Q: cthl::Store> AccountGather<S, C, R, Q> {
             configuration,
             #[cfg(feature = "issuer")]
             room_authority: None,
+            room_quota: crbk::FORUM_ROOM_PASSES_PER_EPOCH,
             clock: ObservedClock {
                 clock,
                 floor: AtomicU64::new(0),

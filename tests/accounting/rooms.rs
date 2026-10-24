@@ -13,14 +13,13 @@ fn configuration(native: &Fixture) -> RoomConfiguration {
 
 // Actual fixture publication signer. Refreshing authenticated metadata changes
 // neither the native proof nor its record descriptor or accounting policy.
-fn refresh(g1: &mut G1, native: &Fixture, revision: u64, quota: u64) {
-    refresh_record(g1, native, revision, quota, None);
+fn refresh(g1: &mut G1, native: &Fixture, revision: u64) {
+    refresh_record(g1, native, revision, None);
 }
 fn refresh_record(
     g1: &mut G1,
     native: &Fixture,
     revision: u64,
-    quota: u64,
     record: Option<Option<czkp::record::Epoch>>,
 ) {
     use csgn::{Kind, SecretKey, Signer};
@@ -68,9 +67,6 @@ fn refresh_record(
             if let Some(revision) = balance_revision {
                 value["balance_revision"] = revision.into();
             }
-        }
-        if name == "settings" {
-            value["content"]["forum.room_passes_per_epoch"] = quota.into();
         }
         feed[name] = serde_json::to_value(
             issuer
@@ -163,7 +159,7 @@ async fn native_member_issues_one_frozen_epoch_then_anonymous_room_survives_depa
             .unwrap()
     );
     let pass = prepared.finalize(&signature, native.now * 1000).unwrap();
-    refresh(&mut g1, &native, 2, 4);
+    refresh(&mut g1, &native, 2);
     let refreshed = gather
         .room_epoch(&current, &g1.verification(native.now), &clean)
         .await
@@ -272,14 +268,17 @@ async fn allowance_change(changed_quota: u64) {
         .await
         .unwrap();
     let anchor = store.get("room-pass-issuer").await.unwrap().unwrap();
-    refresh(&mut g1, &native, 2, changed_quota);
+    // A release with another room-pass constant restores over the original issuer.
+    gather.set_room_quota(changed_quota);
+    refresh(&mut g1, &native, 2);
     assert!(
         gather
             .room_epoch(&current, &g1.verification(native.now), &clean)
             .await
             .is_err()
     );
-    refresh(&mut g1, &native, 3, 4);
+    gather.set_room_quota(crbk::FORUM_ROOM_PASSES_PER_EPOCH);
+    refresh(&mut g1, &native, 3);
     assert!(
         gather
             .room_epoch(&current, &g1.verification(native.now), &clean)
@@ -358,7 +357,7 @@ async fn signed_record_withdrawal_cannot_resurrect_original_anonymous_issuer() {
     let anchor = store.get("room-pass-issuer").await.unwrap().unwrap();
     // A real signed owner withdrawal is observed on the anonymous path; no
     // member record is rechecked or invented to obtain this refusal.
-    refresh_record(&mut g1, &native, 2, 4, Some(None));
+    refresh_record(&mut g1, &native, 2, Some(None));
     assert!(
         gather
             .room(&command, &proof, &g1.verification(native.now))
@@ -369,7 +368,6 @@ async fn signed_record_withdrawal_cannot_resurrect_original_anonymous_issuer() {
         &mut g1,
         &native,
         3,
-        4,
         Some(native.material.record_epoch.clone()),
     );
     assert!(

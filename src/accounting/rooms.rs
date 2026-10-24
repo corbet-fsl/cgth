@@ -28,14 +28,14 @@ impl<S: Store, C: Clock, R: Tokens, Q: cthl::Store> AccountGather<S, C, R, Q> {
     ) -> Result<(VerifiedRecordEpoch, u64), Error> {
         let now = self.clock.seconds()?;
         let (balance, bounds) = material(&self.configuration, verification.charter, now)?;
-        let settings = crbk::ForumSettings::from_snapshot(
+        let _forum = crbk::ForumSettings::from_snapshot(
             verification
                 .charter
                 .settings(now)
                 .map_err(|_| Error::AccountingUnavailable)?,
         )
         .map_err(|_| Error::AccountingUnavailable)?;
-        let quota = settings.room_passes_per_epoch;
+        let quota = self.room_quota;
         let epoch = self
             .verifier
             .current_epoch(balance, bounds, now)
