@@ -39,7 +39,7 @@ fn sign(issuer: &mut Signer, kind: Kind, value: Value, now: u64) -> Vec<u8> {
         .sign(kind, &serde_json::to_vec(&value).unwrap(), now, now + 300)
         .unwrap()
 }
-pub(super) fn feed(native: &NativeFixture, lease_ms: u64) -> Value {
+pub(super) fn feed(native: &NativeFixture, _lease_ms: u64) -> Value {
     let community = &native.material.community;
     let now = native.now;
     let epoch = native.material.policy_epoch;
@@ -49,9 +49,6 @@ pub(super) fn feed(native: &NativeFixture, lease_ms: u64) -> Value {
     crbk::define_forum_settings(&mut book).unwrap();
     crbk::RecordEpochSettings::define(&mut book, PERIOD_KEY).unwrap();
     for (key, value) in [
-        ("forum.heartbeat_ms", json!(1000)),
-        ("forum.lease_ms", json!(lease_ms)),
-        ("forum.minimum_client_version", json!("0.1.0")),
         ("forum.room_passes_per_epoch", json!(4)),
         (PERIOD_KEY, json!(native.trusted_period_seconds)),
     ] {
