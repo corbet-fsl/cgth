@@ -183,7 +183,6 @@ impl G1 {
         Verification {
             charter: self.charter.current(now).unwrap(),
             action: ACTION,
-            maximum_snapshot_age: 300,
         }
     }
 }
