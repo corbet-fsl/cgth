@@ -191,7 +191,10 @@ async fn native_member_issues_one_frozen_epoch_then_anonymous_room_survives_depa
         .unwrap();
     assert!(
         store
-            .get(&format!("swb_{}", member(7)))
+            .get(&cswb::attendance_key(
+                &member(7),
+                &g1.device.verifying_key().to_bytes()
+            ))
             .await
             .unwrap()
             .is_none()

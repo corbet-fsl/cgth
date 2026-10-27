@@ -244,7 +244,10 @@ async fn real_native_entry_retains_exact_record_and_rechecks_reads_and_replaceme
         native.record.epoch.expires_at * 1000
     );
     let retained = store
-        .get(&format!("swb_{}", member(7)))
+        .get(&cswb::attendance_key(
+            &member(7),
+            &g1.device.verifying_key().to_bytes(),
+        ))
         .await
         .unwrap()
         .unwrap();

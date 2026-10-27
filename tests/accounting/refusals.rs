@@ -92,7 +92,10 @@ async fn fresh_context_proof_and_device_mutations_leave_pending_retryable() {
     assert!(store.get(&pending_key(&challenge)).await.unwrap().unwrap() == original);
     assert!(
         store
-            .get(&format!("swb_{}", member(7)))
+            .get(&cswb::attendance_key(
+                &member(7),
+                &g1.device.verifying_key().to_bytes()
+            ))
             .await
             .unwrap()
             .is_none()
@@ -160,7 +163,10 @@ async fn authenticated_other_member_cannot_reuse_original_record_owner() {
     ));
     assert!(
         store
-            .get(&format!("swb_{}", member(8)))
+            .get(&cswb::attendance_key(
+                &member(8),
+                &other.device.verifying_key().to_bytes()
+            ))
             .await
             .unwrap()
             .is_none()
@@ -244,7 +250,10 @@ async fn real_capacity_failure_rolls_back_both_pending_and_attendance_rows() {
     assert!(store.get(&pending_key(&challenge)).await.unwrap().unwrap() == original);
     assert!(
         store
-            .get(&format!("swb_{}", member(7)))
+            .get(&cswb::attendance_key(
+                &member(7),
+                &g1.device.verifying_key().to_bytes()
+            ))
             .await
             .unwrap()
             .is_none()
