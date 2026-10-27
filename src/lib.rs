@@ -172,6 +172,21 @@ impl<S: Store, C: Clock, R: Tokens, Q: cthl::Store> Gather<S, C, R, Q> {
             .map_err(Error::Presence)
     }
 
+    /// Replace with the device's signed Wave-budget hint (`None` = unknown).
+    pub async fn replace_with(
+        &self,
+        session: &Session,
+        current: &Current,
+        expected: Revision,
+        admission: Admission,
+        accepting_waves: Option<bool>,
+    ) -> Result<Live, Error> {
+        self.presence
+            .replace_with(session, current, expected, admission, accepting_waves)
+            .await
+            .map_err(Error::Presence)
+    }
+
     pub async fn heartbeat(
         &self,
         session: &Session,
@@ -180,6 +195,20 @@ impl<S: Store, C: Clock, R: Tokens, Q: cthl::Store> Gather<S, C, R, Q> {
     ) -> Result<Live, Error> {
         self.presence
             .heartbeat(session, current, expected)
+            .await
+            .map_err(Error::Presence)
+    }
+
+    /// Heartbeat with the device's signed Wave-budget hint (`None` = unknown).
+    pub async fn heartbeat_with(
+        &self,
+        session: &Session,
+        current: &Current,
+        expected: Revision,
+        accepting_waves: Option<bool>,
+    ) -> Result<Live, Error> {
+        self.presence
+            .heartbeat_with(session, current, expected, accepting_waves)
             .await
             .map_err(Error::Presence)
     }

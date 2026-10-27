@@ -310,6 +310,7 @@ async fn real_native_entry_retains_exact_record_and_rechecks_reads_and_replaceme
                 expected: renewed.revision,
                 publication: &new_publication,
                 record: &public,
+                accepting_waves: None,
             },
             &replacement.verification(native.now),
             &clean,

@@ -118,6 +118,17 @@ impl<S: Store, C: Clock, R: Tokens, Q: cthl::Store> AccountGather<S, C, R, Q> {
         expected: cmmr::Revision,
         verification: &Verification<'_>,
     ) -> Result<cswb::Live, Error> {
+        self.heartbeat_with(read, expected, verification, None)
+            .await
+    }
+    /// Heartbeat with the device's signed Wave-budget hint (`None` = unknown).
+    pub async fn heartbeat_with(
+        &mut self,
+        read: Read<'_>,
+        expected: cmmr::Revision,
+        verification: &Verification<'_>,
+        accepting_waves: Option<bool>,
+    ) -> Result<cswb::Live, Error> {
         read.validate()?;
         if expected != read.current.row.revision() {
             return Err(Error::Presence(cswb::Error::Stale));
@@ -128,7 +139,12 @@ impl<S: Store, C: Clock, R: Tokens, Q: cthl::Store> AccountGather<S, C, R, Q> {
         }
         let live = self
             .gather
-            .heartbeat(read.session, &read.current.current, expected)
+            .heartbeat_with(
+                read.session,
+                &read.current.current,
+                expected,
+                accepting_waves,
+            )
             .await?;
         self.check(read.current, verification)?;
         if self.clock.now()? >= live.deadline {

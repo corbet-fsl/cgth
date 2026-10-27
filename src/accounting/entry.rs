@@ -5,6 +5,8 @@ pub struct Replacement<'a> {
     pub expected: cmmr::Revision,
     pub publication: &'a cswb::Publication,
     pub record: &'a PublicRecord,
+    /// The device's signed Wave-budget hint (`None` = unknown = visible).
+    pub accepting_waves: Option<bool>,
 }
 
 impl<S: Store, C: Clock, R: Tokens, Q: cthl::Store> AccountGather<S, C, R, Q> {
@@ -145,6 +147,7 @@ impl<S: Store, C: Clock, R: Tokens, Q: cthl::Store> AccountGather<S, C, R, Q> {
             expected,
             publication,
             record,
+            accepting_waves,
         } = replacement;
         read.validate()?;
         if expected != read.current.row.revision() {
@@ -187,7 +190,13 @@ impl<S: Store, C: Clock, R: Tokens, Q: cthl::Store> AccountGather<S, C, R, Q> {
             .map_err(|_| Error::AccountingUnavailable)?;
         let live = self
             .gather
-            .replace(read.session, &read.current.current, expected, candidate)
+            .replace_with(
+                read.session,
+                &read.current.current,
+                expected,
+                candidate,
+                accepting_waves,
+            )
             .await?;
         self.check(read.current, verification)?;
         let now = self.clock.seconds()?;
