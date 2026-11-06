@@ -16,7 +16,7 @@ cswb = { git = "https://git.corbet.ch/corbet-foss/cswb.git", branch = "main" }
 clkp = { git = "https://git.corbet.ch/corbet-foss/clkp.git", branch = "main" }
 cmmr = { git = "https://git.corbet.ch/corbet-foss/cmmr.git", branch = "main" }
 cthl = { git = "https://git.corbet.ch/corbet-foss/cthl", branch = "main" }
-cmbl = { git = "https://git.corbet.ch/corbet-foss/cmbl.git", branch = "main" }
+cmbl = { git = "https://git.corbet.ch/corbet-foss/cmbl.git", branch = "v01" }
 
 cshm = { git = "https://git.corbet.ch/corbet-foss/cshm", branch = "main" }
 
