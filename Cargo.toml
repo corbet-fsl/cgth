@@ -3,7 +3,7 @@ name = "cgth"
 version = "0.1.0"
 edition = "2024"
 description = "Gather for the volatile forum"
-repository = "https://git.corbet.ch/corbet-libs/cgth.git"
+repository = "https://git.corbet.ch/corbet-fsl/cgth.git"
 license-file = "LICENSE.md"
 
 [features]
@@ -12,30 +12,30 @@ issuer = ["cmbl/issuer"]
 accounting = ["dep:cblc", "dep:czkp", "dep:cchr", "dep:crbk", "dep:cbcn", "dep:serde", "dep:serde_json", "dep:data-encoding"]
 
 [dependencies]
-cswb = { git = "https://git.corbet.ch/corbet-foss/cswb.git", branch = "main" }
-clkp = { git = "https://git.corbet.ch/corbet-foss/clkp.git", branch = "main" }
-cmmr = { git = "https://git.corbet.ch/corbet-foss/cmmr.git", branch = "main" }
-cthl = { git = "https://git.corbet.ch/corbet-foss/cthl", branch = "main" }
-cmbl = { git = "https://git.corbet.ch/corbet-foss/cmbl.git", branch = "main" }
+cswb = { git = "https://git.corbet.ch/corbet-libre/cswb.git", branch = "main" }
+clkp = { git = "https://git.corbet.ch/corbet-libre/clkp.git", branch = "main" }
+cmmr = { git = "https://git.corbet.ch/corbet-libre/cmmr.git", branch = "main" }
+cthl = { git = "https://git.corbet.ch/corbet-libre/cthl.git", branch = "main" }
+cmbl = { git = "https://git.corbet.ch/corbet-libre/cmbl.git", branch = "main" }
 
-cshm = { git = "https://git.corbet.ch/corbet-foss/cshm", branch = "main" }
+cshm = { git = "https://git.corbet.ch/corbet-libre/cshm.git", branch = "main" }
 
 [target.'cfg(not(target_arch = "wasm32"))'.dependencies]
-cblc = { git = "https://git.corbet.ch/corbet-libs/cblc", branch = "main", features = ["publication"], optional = true }
-czkp = { git = "https://git.corbet.ch/corbet-foss/czkp", branch = "main", optional = true }
-cchr = { git = "https://git.corbet.ch/corbet-foss/cchr.git", branch = "main", optional = true }
-crbk = { git = "https://git.corbet.ch/corbet-foss/crbk", branch = "main", default-features = false, optional = true }
-cbcn = { git = "https://git.corbet.ch/corbet-foss/cbcn", branch = "main", optional = true }
+cblc = { git = "https://git.corbet.ch/corbet-fsl/cblc.git", branch = "main", features = ["publication"], optional = true }
+czkp = { git = "https://git.corbet.ch/corbet-foss/czkp.git", branch = "main", optional = true }
+cchr = { git = "https://git.corbet.ch/corbet-libre/cchr.git", branch = "main", optional = true }
+crbk = { git = "https://git.corbet.ch/corbet-libre/crbk.git", branch = "main", default-features = false, optional = true }
+cbcn = { git = "https://git.corbet.ch/corbet-libre/cbcn.git", branch = "main", optional = true }
 serde = { version = "1", features = ["derive"], optional = true }
 serde_json = { version = "1", optional = true }
 data-encoding = { version = "2", optional = true }
 
 [dev-dependencies]
 tokio = { version = "1", features = ["rt", "macros"] }
-cpfl = { git = "https://git.corbet.ch/corbet-foss/cpfl.git", branch = "main" }
-cgrd = { git = "https://git.corbet.ch/corbet-foss/cgrd", branch = "main", default-features = false }
-csgn = { git = "https://git.corbet.ch/corbet-foss/csgn", branch = "main", default-features = false, features = ["volatile-signer"] }
-ckmg = { git = "https://git.corbet.ch/corbet-foss/ckmg.git", branch = "main" }
+cpfl = { git = "https://git.corbet.ch/corbet-libre/cpfl.git", branch = "main" }
+cgrd = { git = "https://git.corbet.ch/corbet-libre/cgrd.git", branch = "main", default-features = false }
+csgn = { git = "https://git.corbet.ch/corbet-libre/csgn.git", branch = "main", default-features = false, features = ["volatile-signer"] }
+ckmg = { git = "https://git.corbet.ch/corbet-libre/ckmg.git", branch = "main" }
 cwst = { git = "https://git.corbet.ch/corbet-foss/cwst.git", branch = "main" }
-cnvl = { git = "https://git.corbet.ch/corbet-foss/cnvl.git", branch = "main" }
+cnvl = { git = "https://git.corbet.ch/corbet-libre/cnvl.git", branch = "main" }
 ed25519-dalek = { version = "3", default-features = false, features = ["fast"] }
