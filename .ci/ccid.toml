@@ -33,3 +33,5 @@ events = ["manual"]
 checks = ["resolve-dependencies"]
 workflow = "resolve"
 command = ["bash", ".ci/run-cached.sh"]
+
+[check_shell]
