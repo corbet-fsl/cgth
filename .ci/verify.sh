@@ -8,14 +8,25 @@ python3 .github/check-first-party.py
 
 # Import the independently checked genuine R2 capture into this job's own
 # snapshot. Never execute an unpinned cached worker or regenerate these proofs.
+# cblc produces the capture (record-epoch) and retains it write-once under the
+# digest of its worker receipt; that digest is the pin, and the store is read
+# content-addressed because the producer's ccid cache namespace follows its
+# repository URL (the org moved once already).
 fixture_cache_root=${CI_CACHE_ROOT:-${CARGO_HOME:-}}
 [[ $fixture_cache_root = /* ]] || { echo 'An absolute fixture cache root is required' >&2; exit 2; }
+record_fixture_source=e5514337959c4aacb3e9d7f678e3f45898b61061
+record_fixture_digest=e55d4cafadb748f4e24a7a581208407c2fcb32ea74a1ae37532167e9054c4925
+fixture_directory=
+for candidate in "$fixture_cache_root"/ccid-cached/*/release-artifacts/gather-record-fixture-retained/"$record_fixture_digest"; do
+  if [[ -d $candidate ]]; then fixture_directory=$candidate; break; fi
+done
+[[ -n $fixture_directory ]] || { echo "The retained record fixture $record_fixture_digest is missing under $fixture_cache_root (cblc record-epoch retains it)" >&2; exit 2; }
 fixture_snapshot=$(mktemp -d "${RUNNER_TEMP:-${TMPDIR:-/tmp}}/cgth-record-fixture.XXXXXXXX")
 export CBLC_BB
 CBLC_BB=$(python3 .ci/check-record-fixture.py \
-  --directory "$fixture_cache_root/ccid-cached/08a9478e457e604aa31f9a54/release-artifacts/gather-record-fixture" \
-  --source d6014acbef63f4cd0929b20091884dd422421fc3 \
-  --metadata-sha256 7270351d40c1ed49b1499ec82e59449e6d28ca715d5590485dee56e7ef757ff2 \
+  --directory "$fixture_directory" \
+  --source "$record_fixture_source" \
+  --metadata-sha256 "$record_fixture_digest" \
   --output "$fixture_snapshot/capture")
 export CBLC_RECORD_EPOCH_FIXTURE="$fixture_snapshot/capture/gather-record-fixture.json"
 
