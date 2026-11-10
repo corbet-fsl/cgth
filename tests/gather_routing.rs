@@ -262,10 +262,14 @@ async fn presence_lookup_and_room_listing_route_to_their_owners() {
         .await
         .unwrap();
     assert_ne!(renewed.revision, alice_live.revision);
-    assert!(matches!(
-        gather.read(&alice_session, &current).await,
-        Err(Error::Presence(_))
-    ));
+    assert_eq!(
+        gather
+            .read(&alice_session, &current)
+            .await
+            .unwrap()
+            .revision,
+        renewed.revision
+    );
     let current = authorize(&gather, &mut alice, &alice_session, native.now, 2).await;
     let mut second = G1::new(&native, &member(7), 2, 10_000).await;
     let mut third = G1::new(&native, &member(7), 3, 10_000).await;
