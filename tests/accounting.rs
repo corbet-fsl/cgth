@@ -15,6 +15,8 @@ use std::{
     time::Duration,
 };
 
+#[path = "accounting/coverage.rs"]
+mod coverage;
 #[path = "accounting/fixture.rs"]
 mod fixture;
 #[path = "accounting/g1.rs"]
