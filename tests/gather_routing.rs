@@ -269,11 +269,13 @@ async fn presence_lookup_and_room_listing_route_to_their_owners() {
     let current = authorize(&gather, &mut alice, &alice_session, native.now, 2).await;
     let mut second = G1::new(&native, &member(7), 2, 10_000).await;
     let mut third = G1::new(&native, &member(7), 3, 10_000).await;
+    let (second_publication, third_publication) =
+        (second.publication.clone(), third.publication.clone());
     let replaced = gather
         .replacement(
             &alice_session,
             &current,
-            &second.publication,
+            &second_publication,
             &second.verification(native.now),
             &clean,
         )
@@ -283,7 +285,7 @@ async fn presence_lookup_and_room_listing_route_to_their_owners() {
         .replacement(
             &alice_session,
             &current,
-            &third.publication,
+            &third_publication,
             &third.verification(native.now),
             &clean,
         )
@@ -293,7 +295,7 @@ async fn presence_lookup_and_room_listing_route_to_their_owners() {
         .replacement(
             &alice_session,
             &current,
-            &third.publication,
+            &third_publication,
             &third.verification(native.now),
             &clean,
         )
