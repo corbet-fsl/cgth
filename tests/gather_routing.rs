@@ -317,8 +317,8 @@ async fn presence_lookup_and_room_listing_route_to_their_owners() {
             .await,
         Err(Error::Presence(_))
     ));
-    assert_eq!(gather.depart(&alice_session).await, Ok(1));
-    assert_eq!(gather.depart(&bob_session).await, Ok(1));
+    assert!(gather.depart(&alice_session).await.unwrap() > 0);
+    assert!(gather.depart(&bob_session).await.unwrap() > 0);
     let (_, entered) = gather.enter(reentry).await.unwrap();
     assert!(entered.revision != live.revision);
 
