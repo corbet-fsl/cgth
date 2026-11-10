@@ -1,0 +1,4 @@
+# The retained record fixture is public verifier material (no secrets) that CI imports, so it travels with the
+# repository as Git LFS objects instead of being looked up in a runner's cache. See .ci/verify.sh for how a re-pin
+# is committed.
+tests/fixtures/gather-record-fixture/** filter=lfs diff=lfs merge=lfs -text
