@@ -186,7 +186,13 @@ async fn authenticated_other_member_cannot_reuse_original_record_owner() {
 async fn long_pending_challenge_caps_actual_presentation_and_preserves_marker_lifetime() {
     let native = Fixture::load();
     let mut g1 = G1::new(&native, &member(7), 1, 200_000).await;
-    let (mut gather, store, _) = complete(&native, 64);
+    let (mut gather, store, clock) = complete(&native, 64);
+    // A service clock carries a millisecond remainder, never a whole second. The
+    // pending challenge keeps its exact millisecond deadline while the actual
+    // presentation is capped to whole seconds; a clock starting on a second
+    // boundary would make both deadlines equal (they are both second-aligned
+    // from then on) and hide the strict cap asserted below.
+    clock.0.store(native.now * 1000 + 250, Ordering::SeqCst);
     let publication = g1.publication.clone();
     let challenge = gather
         .challenge(ORIGIN, &publication, &g1.verification(native.now), &clean)

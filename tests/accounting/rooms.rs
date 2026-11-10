@@ -34,7 +34,9 @@ fn refresh_record(
     feed["revision"] = revision.into();
     let balance_revision = if let Some(record) = record {
         let mut material = native.material.clone();
-        material.revision += revision;
+        // A signed balance never runs ahead of the Charter revision that names it:
+        // the manifest's balance_revision must be at most feed.revision.
+        material.revision = revision;
         material.record_epoch = record;
         feed["balance"] = serde_json::to_value(
             issuer
@@ -159,6 +161,28 @@ async fn native_member_issues_one_frozen_epoch_then_anonymous_room_survives_depa
             .unwrap()
     );
     let pass = prepared.finalize(&signature, native.now * 1000).unwrap();
+    // The pass holder opens the room's first transport generation while the
+    // member is still present. A fresh room requires verified resumption
+    // (cmbl refuses Connect without room state); the room record is anonymous
+    // traffic state, not attendance.
+    let resume = cmbl::Request {
+        room: [8; 16],
+        operation: [10; 16],
+        action: cmbl::Action::Resume {
+            connection: pass.connection(),
+        },
+    };
+    let resume_proof = pass
+        .prove(&resume, "native-accounting", native.now * 1000)
+        .unwrap();
+    assert_eq!(
+        gather
+            .room(&resume, &resume_proof, &g1.verification(native.now))
+            .await
+            .unwrap()
+            .active_connections,
+        1
+    );
     refresh(&mut g1, &native, 2);
     let refreshed = gather
         .room_epoch(&current, &g1.verification(native.now), &clean)
@@ -199,18 +223,20 @@ async fn native_member_issues_one_frozen_epoch_then_anonymous_room_survives_depa
             .unwrap()
             .is_none()
     );
-    let connect = cmbl::Request {
+    let renew = cmbl::Request {
         room: [8; 16],
-        operation: [10; 16],
-        action: cmbl::Action::Connect {
+        operation: [11; 16],
+        action: cmbl::Action::Renew {
             connection: pass.connection(),
         },
     };
     let proof = pass
-        .prove(&connect, "native-accounting", native.now * 1000)
+        .prove(&renew, "native-accounting", native.now * 1000)
         .unwrap();
+    // Departure removes the member's presence; it never closes the anonymous
+    // room, whose connection still renews until the common epoch expires.
     let result = gather
-        .room(&connect, &proof, &g1.verification(native.now))
+        .room(&renew, &proof, &g1.verification(native.now))
         .await
         .unwrap();
     assert_eq!(result.active_connections, 1);
@@ -220,7 +246,7 @@ async fn native_member_issues_one_frozen_epoch_then_anonymous_room_survives_depa
     assert!(
         gather
             .room(
-                &connect,
+                &renew,
                 &proof,
                 &g1.verification(configuration.valid_until_ms / 1000)
             )
@@ -350,35 +376,46 @@ async fn signed_record_withdrawal_cannot_resurrect_original_anonymous_issuer() {
     let command = cmbl::Request {
         room: [8; 16],
         operation: [10; 16],
-        action: cmbl::Action::Connect {
+        action: cmbl::Action::Resume {
             connection: pass.connection(),
         },
     };
     let proof = pass
         .prove(&command, "native-accounting", native.now * 1000)
         .unwrap();
+    // The anonymous room is live before the withdrawal: verified resumption of a
+    // fresh room opens it (cmbl refuses Connect without room state), so the
+    // refusals below are caused by the withdrawn authority, not by missing state.
+    assert_eq!(
+        gather
+            .room(&command, &proof, &g1.verification(native.now))
+            .await
+            .unwrap()
+            .active_connections,
+        1
+    );
     let anchor = store.get("room-pass-issuer").await.unwrap().unwrap();
     // A real signed owner withdrawal is observed on the anonymous path; no
     // member record is rechecked or invented to obtain this refusal.
     refresh_record(&mut g1, &native, 2, Some(None));
-    assert!(
+    assert!(matches!(
         gather
             .room(&command, &proof, &g1.verification(native.now))
-            .await
-            .is_err()
-    );
+            .await,
+        Err(Error::AccountingUnavailable)
+    ));
     refresh_record(
         &mut g1,
         &native,
         3,
         Some(native.material.record_epoch.clone()),
     );
-    assert!(
+    assert!(matches!(
         gather
             .room(&command, &proof, &g1.verification(native.now))
-            .await
-            .is_err()
-    );
+            .await,
+        Err(Error::AccountingUnavailable)
+    ));
     let retained = store.get("room-pass-issuer").await.unwrap().unwrap();
     assert_eq!(retained.value, anchor.value);
     assert_eq!(retained.revision, anchor.revision);
