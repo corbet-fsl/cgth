@@ -39,3 +39,158 @@ workflow = "resolve"
 command = ["bash", ".ci/run-cached.sh"]
 
 [check_shell]
+
+# accounting (cgthtestsB): reviewed exclusions. Each entry is a guarded arm
+# that the sealed fixture cannot express; the lane's result note carries the
+# measurement behind every reason.
+[[coverage.exclusions]]
+file = "src/accounting.rs"
+line = 263
+source = "return Err(Error::Presence(cswb::Error::Stale));"
+reason = "the requester row and the current capability are the same stored attendance entry, so their retained record bytes and deadlines cannot differ"
+evidence = "tests/accounting/coverage.rs"
+
+[[coverage.exclusions]]
+file = "src/accounting.rs"
+line = 259
+source = "if row.attachment().is_none_or(|stored| {"
+branch = { block = 0, id = 0 }
+reason = "closure body of is_none_or over that self-comparison (retained bytes)"
+evidence_sources = { "src/accounting.rs" = "f323b344c1c123465e20b4287ee68e83376d2e3503a033d84ad25851eb2b4928" }
+
+[[coverage.exclusions]]
+file = "src/accounting.rs"
+line = 260
+source = "stored.bytes() != attachment.bytes()"
+branch = { block = 0, id = 0 }
+reason = "second operand of that self-comparison (record_until)"
+evidence_sources = { "src/accounting.rs" = "f323b344c1c123465e20b4287ee68e83376d2e3503a033d84ad25851eb2b4928" }
+
+[[coverage.exclusions]]
+file = "src/accounting/entry.rs"
+line = 87
+source = "return Err(Error::AccountingUnavailable);"
+reason = "the pending payload is the service-selected ForumListing context and expires_at is floored from that same deadline, so neither operand can hold"
+evidence = "tests/accounting/coverage.rs"
+
+[[coverage.exclusions]]
+file = "src/accounting/entry.rs"
+line = 84
+source = "if expected.purpose != Use::ForumListing"
+branch = { block = 0, id = 0 }
+reason = "purpose operand: the pending context purpose is the service constant"
+evidence_sources = { "src/accounting/entry.rs" = "c8512105b58dd753b4d1210c9ebad87bb0ba0b669884497f8343b4d8eb4a5fbd" }
+
+[[coverage.exclusions]]
+file = "src/accounting/entry.rs"
+line = 85
+source = "|| milliseconds(expected.expires_at)? > prepared.deadline()"
+branch = { block = 0, id = 0 }
+reason = "deadline operand: milliseconds(expires_at) is the floor of the challenge deadline"
+evidence_sources = { "src/accounting/entry.rs" = "c8512105b58dd753b4d1210c9ebad87bb0ba0b669884497f8343b4d8eb4a5fbd" }
+
+[[coverage.exclusions]]
+file = "src/accounting/reads.rs"
+line = 277
+source = "self.confirm(request.read.current, verification, contact)"
+reason = "disclosure tail after the reciprocal-pair check; the fixture has one genuine record owner and Guard refuses same-member pairs, so a second member's genuine record is required"
+evidence = "tests/accounting/coverage.rs"
+
+[[coverage.exclusions]]
+file = "src/accounting/reads.rs"
+line = 278
+source = ".await?;"
+reason = "same disclosure tail (the final cut of the ciphertext read)"
+evidence = "tests/accounting/coverage.rs"
+
+[[coverage.exclusions]]
+file = "src/accounting/reads.rs"
+line = 279
+source = "Ok(result)"
+reason = "same disclosure tail (the returned ciphertext)"
+evidence = "tests/accounting/coverage.rs"
+
+[[coverage.exclusions]]
+file = "src/accounting/rooms.rs"
+line = 35
+source = ".map_err(|_| Error::AccountingUnavailable)?,"
+reason = "room_view re-reads settings(now) with the same now that material() just accepted"
+evidence = "tests/accounting/coverage.rs"
+
+[[coverage.exclusions]]
+file = "src/accounting/rooms.rs"
+line = 37
+source = ".map_err(|_| Error::AccountingUnavailable)?;"
+reason = "crbk::ForumSettings::from_snapshot ignores the snapshot and parses code constants only"
+evidence = "tests/accounting/coverage.rs"
+
+[[coverage.exclusions]]
+file = "src/accounting/rooms.rs"
+line = 194
+source = "return Err(Error::AccountingUnavailable);"
+reason = "activation already bounds configuration.valid_until_ms by the current authority this cut compares"
+evidence = "tests/accounting/coverage.rs"
+
+[[coverage.exclusions]]
+file = "src/accounting/rooms.rs"
+line = 68
+source = "|| frozen.record != *current.epoch()"
+branch = { block = 0, id = 0 }
+reason = "a successor record epoch descriptor needs the record-epoch prover output; the fixture carries one genuine epoch"
+evidence_sources = { "src/accounting/rooms.rs" = "8d312a754ddf6f04192d56820784d6e8a27946158b3086505133d9203ce9bac3" }
+
+[[coverage.exclusions]]
+file = "src/accounting/rooms.rs"
+line = 69
+source = "|| frozen.policy_digest != *current.policy_digest()"
+branch = { block = 0, id = 0 }
+reason = "a different policy digest is refused by the relying owner's material validation before this comparison"
+evidence_sources = { "src/accounting/rooms.rs" = "8d312a754ddf6f04192d56820784d6e8a27946158b3086505133d9203ce9bac3" }
+
+[[coverage.exclusions]]
+file = "src/accounting/rooms.rs"
+line = 75
+source = "if frozen.configuration.valid_from_ms < milliseconds(current.valid_from())?"
+branch = { block = 0, id = 0 }
+reason = "the anchored window and the sealed epoch window are the same value at activation; a changed epoch is refused earlier"
+evidence_sources = { "src/accounting/rooms.rs" = "8d312a754ddf6f04192d56820784d6e8a27946158b3086505133d9203ce9bac3" }
+
+[[coverage.exclusions]]
+file = "src/accounting/rooms.rs"
+line = 76
+source = "|| frozen.configuration.valid_until_ms > milliseconds(current.valid_until())?"
+branch = { block = 0, id = 0 }
+reason = "same anchored window: the epoch expiry is bound by activation and cannot shrink while the descriptor stays current"
+evidence_sources = { "src/accounting/rooms.rs" = "8d312a754ddf6f04192d56820784d6e8a27946158b3086505133d9203ce9bac3" }
+
+[[coverage.exclusions]]
+file = "src/accounting/rooms.rs"
+line = 77
+source = "|| now < frozen.configuration.valid_from_ms"
+branch = { block = 0, id = 0 }
+reason = "the first operand needs now < valid_from while activation required valid_from <= now"
+evidence_sources = { "src/accounting/rooms.rs" = "8d312a754ddf6f04192d56820784d6e8a27946158b3086505133d9203ce9bac3" }
+
+[[coverage.exclusions]]
+file = "src/accounting/rooms.rs"
+line = 127
+source = "if configuration.incarnation.is_empty()"
+branch = { block = 0, id = 0 }
+reason = "cmmr::Scope::new already refuses an empty incarnation before is_empty()"
+evidence_sources = { "src/accounting/rooms.rs" = "8d312a754ddf6f04192d56820784d6e8a27946158b3086505133d9203ce9bac3" }
+
+[[coverage.exclusions]]
+file = "src/accounting/rooms.rs"
+line = 132
+source = "|| configuration.valid_until_ms > current.authority_until()"
+branch = { block = 0, id = 0 }
+reason = "authority_until is exactly milliseconds(record.valid_until()), which line 131 tests first"
+evidence_sources = { "src/accounting/rooms.rs" = "8d312a754ddf6f04192d56820784d6e8a27946158b3086505133d9203ce9bac3" }
+
+[[coverage.exclusions]]
+file = "src/accounting/rooms.rs"
+line = 186
+source = "if current.authority_until()"
+branch = { block = 0, id = 0 }
+reason = "the pass cut compares against the same authority that activation already bounded valid_until_ms by"
+evidence_sources = { "src/accounting/rooms.rs" = "8d312a754ddf6f04192d56820784d6e8a27946158b3086505133d9203ce9bac3" }
