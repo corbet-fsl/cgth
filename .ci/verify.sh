@@ -6,21 +6,29 @@ export CARGO_TERM_COLOR="${CARGO_TERM_COLOR:-always}"
 # dependency-policy first-party only; deny advisories separate always-run.
 python3 .github/check-first-party.py
 
-# Import the independently checked genuine R2 capture into this job's own
-# snapshot. Never execute an unpinned cached worker or regenerate these proofs.
-# cblc produces the capture (record-epoch) and retains it write-once under the
-# digest of its worker receipt; that digest is the pin, and the store is read
-# content-addressed because the producer's ccid cache namespace follows its
-# repository URL (the org moved once already).
-fixture_cache_root=${CI_CACHE_ROOT:-${CARGO_HOME:-}}
-[[ $fixture_cache_root = /* ]] || { echo 'An absolute fixture cache root is required' >&2; exit 2; }
+# Import the independently checked genuine R2 capture into this job's own snapshot. Never execute an
+# unpinned fixture worker or regenerate these proofs. The capture travels with this repository as Git
+# LFS objects (`.gitattributes`: tests/fixtures/gather-record-fixture/**), so a lane, a land and CI all
+# see the same pinned bytes without reaching into a runner's cache.
+# cblc produces the capture (`record-epoch`); the sha256 of its worker receipt (worker.json) is the pin,
+# and `.ci/check-record-fixture.py` validates that receipt, the worker bytes and every artifact against
+# the constants below before anything is executed.
+#
+# Re-pin (a new cblc `record-epoch` capture):
+#   1. Take the capture directory cblc retained (worker, worker.json, gather-record-fixture.json,
+#      config.json, manifest.json, circuits.json, keys.json, setup/g1.dat, setup/g2.dat).
+#   2. Copy it to tests/fixtures/gather-record-fixture/<sha256 of its worker.json>/ and point
+#      record_fixture_digest at that sha256, record_fixture_source at its sourceCommit; commit both
+#      together so the LFS pointers and the pin never disagree.
+#   3. Keep only one <pin> directory: the previous capture is removed in the same commit.
+repository_root=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 record_fixture_source=e5514337959c4aacb3e9d7f678e3f45898b61061
 record_fixture_digest=e55d4cafadb748f4e24a7a581208407c2fcb32ea74a1ae37532167e9054c4925
-fixture_directory=
-for candidate in "$fixture_cache_root"/ccid-cached/*/release-artifacts/gather-record-fixture-retained/"$record_fixture_digest"; do
-  if [[ -d $candidate ]]; then fixture_directory=$candidate; break; fi
-done
-[[ -n $fixture_directory ]] || { echo "The retained record fixture $record_fixture_digest is missing under $fixture_cache_root (cblc record-epoch retains it)" >&2; exit 2; }
+fixture_directory=$repository_root/tests/fixtures/gather-record-fixture/$record_fixture_digest
+[[ -d $fixture_directory ]] || { echo "The retained record fixture $record_fixture_digest is missing from tests/fixtures/gather-record-fixture (Git LFS: git lfs pull)" >&2; exit 2; }
+# git records only the executable bit of a file, the checkout's umask decides the rest, so the worker's
+# mode is normalized to the recorded one before the snapshot validates it byte for byte.
+chmod u=rwx,go=rx "$fixture_directory/worker"
 fixture_snapshot=$(mktemp -d "${RUNNER_TEMP:-${TMPDIR:-/tmp}}/cgth-record-fixture.XXXXXXXX")
 export CBLC_BB
 CBLC_BB=$(python3 .ci/check-record-fixture.py \
