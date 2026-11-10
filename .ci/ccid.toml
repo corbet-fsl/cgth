@@ -3,9 +3,13 @@ project = "cgth"
 
 [checks.verify]
 kind = "commands"
-commands = [["bash", ".ci/verify.sh"]]
+fleet = true
+commands = [
+  ["ccid", "first-party"],
+  ["bash", "-c", "set -euo pipefail\nrepository_root=$PWD\nrecord_fixture_source=e5514337959c4aacb3e9d7f678e3f45898b61061\nrecord_fixture_digest=e55d4cafadb748f4e24a7a581208407c2fcb32ea74a1ae37532167e9054c4925\nfixture_directory=$repository_root/tests/fixtures/gather-record-fixture/$record_fixture_digest\n[[ -d $fixture_directory ]] || { echo \"The retained record fixture $record_fixture_digest is missing from tests/fixtures/gather-record-fixture (Git LFS: git lfs pull)\" >&2; exit 2; }\n# git records only the executable bit of a file, the checkout's umask decides the rest, so the worker's\n# mode is normalized to the recorded one before the snapshot validates it byte for byte.\nchmod u=rwx,go=rx \"$fixture_directory/worker\"\nfixture_snapshot=$(mktemp -d \"${RUNNER_TEMP:-${TMPDIR:-/tmp}}/cgth-record-fixture.XXXXXXXX\")\nexport CBLC_BB\nCBLC_BB=$(python3 .ci/check-record-fixture.py \\\n  --directory \"$fixture_directory\" \\\n  --source \"$record_fixture_source\" \\\n  --metadata-sha256 \"$record_fixture_digest\" \\\n  --output \"$fixture_snapshot/capture\")\nexport CBLC_RECORD_EPOCH_FIXTURE=\"$fixture_snapshot/capture/gather-record-fixture.json\"\ncargo fmt --all --check\ncargo clippy --locked --all-targets -- -D warnings\ncargo test --locked --all-targets\nexport CARGO_PROFILE_TEST_OPT_LEVEL='0'\nccid coverage run"],
+]
 cache_tools = [["rustc", "-vV"], ["cargo", "--version"], ["rustup", "run", "nightly", "rustc", "-vV"], ["rustup", "run", "nightly", "cargo", "llvm-cov", "--version"], ["python3", "--version"]]
-cache_outputs = ["coverage.json", "coverage.lcov"]
+cache_outputs = ["coverage.json", "coverage.lcov", "coverage.txt"]
 
 [checks.advisories]
 kind = "commands"
