@@ -705,7 +705,7 @@ dependencies = [
 [[package]]
 name = "cblc"
 version = "0.0.0"
-source = "git+https://git.corbet.ch/corbet-fsl/cblc.git?branch=main#226fb6e5620446d6f8ea0d09ad0db8b835448e60"
+source = "git+https://git.corbet.ch/corbet-fsl/cblc.git?branch=main#8aeb279703b7b1ddd539bbc1f45de80d8ede9eb3"
 dependencies = [
  "cbcn",
  "cmbl",
@@ -771,7 +771,7 @@ dependencies = [
  "schemars",
  "serde",
  "serde_json",
- "sha2 0.11.0",
+ "sha2 0.11.1",
  "url",
  "webauthn-rs-proto",
 ]
@@ -962,7 +962,7 @@ dependencies = [
  "schemars",
  "serde",
  "serde_json",
- "sha2 0.11.0",
+ "sha2 0.11.1",
  "x25519-dalek",
  "zeroize",
 ]
@@ -979,7 +979,7 @@ dependencies = [
  "ring",
  "serde",
  "serde_json",
- "sha2 0.11.0",
+ "sha2 0.11.1",
  "webauthn-rs-proto",
 ]
 
@@ -1006,7 +1006,7 @@ dependencies = [
  "data-encoding",
  "serde",
  "serde_json",
- "sha2 0.11.0",
+ "sha2 0.11.1",
 ]
 
 [[package]]
@@ -1167,7 +1167,7 @@ version = "0.0.0"
 source = "git+https://git.corbet.ch/corbet-libre/cpns.git?branch=main#c6adc003f26f7c595bfa52aca051a691c305d88b"
 dependencies = [
  "getrandom 0.4.3",
- "sha2 0.11.0",
+ "sha2 0.11.1",
  "subtle",
  "zeroize",
 ]
@@ -1256,7 +1256,7 @@ dependencies = [
 [[package]]
 name = "crlt"
 version = "0.0.0"
-source = "git+https://git.corbet.ch/corbet-libre/crlt.git?branch=main#e8a4646396be5007d4d9960d142028fc604f5834"
+source = "git+https://git.corbet.ch/corbet-libre/crlt.git?branch=main#d80ddf00284fc200e7522ad627a723afa1786ed0"
 dependencies = [
  "deadpool",
  "libsql",
@@ -1334,7 +1334,7 @@ dependencies = [
  "coset",
  "ed25519-dalek 3.0.0",
  "rand_core 0.10.1",
- "sha2 0.11.0",
+ "sha2 0.11.1",
  "zeroize",
 ]
 
@@ -1377,7 +1377,7 @@ dependencies = [
  "ed25519-dalek 3.0.0",
  "serde",
  "serde_json",
- "sha2 0.11.0",
+ "sha2 0.11.1",
  "url",
 ]
 
@@ -1472,7 +1472,7 @@ dependencies = [
  "hpke",
  "serde",
  "serde_json",
- "sha2 0.11.0",
+ "sha2 0.11.1",
  "thiserror 2.0.21",
  "zeroize",
 ]
@@ -1486,7 +1486,7 @@ dependencies = [
  "data-encoding",
  "serde",
  "serde_json",
- "sha2 0.11.0",
+ "sha2 0.11.1",
 ]
 
 [[package]]
@@ -1526,7 +1526,7 @@ dependencies = [
  "rs_merkle",
  "serde",
  "serde_json",
- "sha2 0.11.0",
+ "sha2 0.11.1",
 ]
 
 [[package]]
@@ -1800,7 +1800,7 @@ dependencies = [
  "ed25519 3.0.0",
  "rand_core 0.10.1",
  "serde",
- "sha2 0.11.0",
+ "sha2 0.11.1",
  "signature 3.0.0",
  "subtle",
  "zeroize",
@@ -2381,7 +2381,7 @@ dependencies = [
  "p384",
  "p521",
  "rand_core 0.10.1",
- "sha2 0.11.0",
+ "sha2 0.11.1",
  "sha3",
  "shake",
  "subtle",
@@ -2666,9 +2666,9 @@ dependencies = [
 
 [[package]]
 name = "itoa"
-version = "1.0.18"
+version = "1.0.19"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8f42a60cbdf9a97f5d2305f08a87dc4e09308d1276d28c869c684d7777685682"
+checksum = "3bd1574e617a9a6c1f8f8181bd7e841e1f20e4277607ef28945765188d6284d4"
 
 [[package]]
 name = "jni"
@@ -3219,7 +3219,7 @@ dependencies = [
  "rand 0.10.3",
  "serde",
  "serde_derive",
- "sha2 0.11.0",
+ "sha2 0.11.1",
  "thiserror 2.0.21",
  "toml",
 ]
@@ -3289,7 +3289,7 @@ dependencies = [
  "elliptic-curve",
  "primefield",
  "primeorder",
- "sha2 0.11.0",
+ "sha2 0.11.1",
 ]
 
 [[package]]
@@ -3353,7 +3353,7 @@ dependencies = [
  "ml-dsa",
  "p256",
  "rand 0.10.3",
- "sha2 0.11.0",
+ "sha2 0.11.1",
  "signature 3.0.0",
  "zeroize",
 ]
@@ -4344,9 +4344,9 @@ dependencies = [
 
 [[package]]
 name = "sha2"
-version = "0.11.0"
+version = "0.11.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "446ba717509524cb3f22f17ecc096f10f4822d76ab5c0b9822c5f9c284e825f4"
+checksum = "47d7069beb7d6ac7b9acd1039986e73443f24234f41074da099d6f994ac9ad19"
 dependencies = [
  "cfg-if",
  "cpufeatures 0.3.1",
@@ -4646,7 +4646,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "32497e9a4c7b38532efcdebeef879707aa9f794296a4f0244f6f69e9bc8574bd"
 dependencies = [
  "fastrand",
- "getrandom 0.4.3",
+ "getrandom 0.3.4",
  "once_cell",
  "rustix 1.1.6",
  "windows-sys 0.61.2",
