@@ -1,1 +1,6 @@
 [advisories]
+ignore = [
+    { id = "RUSTSEC-2023-0071", reason = "rsa 0.10.0-rc.19 comes only via cmbl -> blind-rsa-signatures 0.18 (newest; it does not build with rsa 0.10.0); cmbl calls only its public-key blind/finalize/verify, the issuer's private-key op is OpenSSL, nothing decrypts; drop when blind-rsa-signatures moves to rsa 0.10.0" },
+    { id = "RUSTSEC-2024-0388", reason = "derivative 2.2.0 is a build-time proc macro of arkworks 0.4 (ark-ff, ark-ec, ark-poly) under the Dock BBS+ stack via cchr; unmaintained, no known vulnerability; Dock's newest bbs_plus 0.25 still requires ark 0.4, replace when Dock moves to ark 0.6" },
+    { id = "RUSTSEC-2024-0436", reason = "paste 1.0.15 is a build-time proc macro of arkworks 0.4 under the Dock BBS+ stack via cchr; unmaintained, no known vulnerability; Dock's newest bbs_plus 0.25 still requires ark 0.4, replace when Dock moves to ark 0.6" },
+]
