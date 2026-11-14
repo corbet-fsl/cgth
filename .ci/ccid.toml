@@ -194,3 +194,6 @@ source = "if current.authority_until()"
 branch = { block = 0, id = 0 }
 reason = "the pass cut compares against the same authority that activation already bounded valid_until_ms by"
 evidence_sources = { "src/accounting/rooms.rs" = "8d312a754ddf6f04192d56820784d6e8a27946158b3086505133d9203ce9bac3" }
+
+[security]
+dependencies = "cargo-deny"
